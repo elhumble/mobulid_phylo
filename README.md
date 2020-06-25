@@ -1,6 +1,6 @@
 **Phylogenomics and species delimitation for effective conservation of manta and devil rays**
 
-Jane Hosegood, [Emily Humble](http:/elhumble.github.io/), et al.
+Jane Hosegood, [Emily Humble](http:/elhumble.github.io/), Rob Ogden, Mark de Bruyn, Si Creer, Guy Stevens, Mohammed Abudaya, Kim Bassos-Hull, Ramon Bonfil, Daniel Fernando, Andrew D. Foote, Helen Hipperson, Rima W. Jabado, Jennifer Kaden, Muhammad Moazzam, Lauren Peel, Stephen Pollet, Alessandro Ponzo, Marloes Poortvliet, Jehad Salah, Helen Senn, Joshua Stewart, Sabine Wintner, Gary Carvalho
 
 ###### Pre-print available [here](https://www.biorxiv.org/content/10.1101/458141v2)
 
