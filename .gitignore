@@ -1,0 +1,11 @@
+.Rapp.history
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+/data
+/doc
+/figs
+/old
+/SAMPLES
+9_COI_tree.R
