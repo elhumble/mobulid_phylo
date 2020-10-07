@@ -693,6 +693,110 @@ dev.off()
 #      Supplementary Plot       #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
+#~~ Manta
+
+mantas_eig <- pca_mantas$eig
+mobjap_eig <- pca_mobjap$eig
+thurerekuh_eig <- pca_thurerekuh$eig
+hypmunk_eig <- pca_hypmunk$eig
+
+ggplot_mantas_eig <- data.frame(eig = mantas_eig) %>%
+  mutate(plot = "A",
+         X = 1:nrow(.),
+         colour_12 = c(c("plotted", "plotted", "retained"), 
+                       rep("discarded", each = nrow(.) - 3)),
+         colour_13 = c(c("plotted", "retained", "plotted"), 
+                       rep("discarded", each = nrow(.) - 3)))
+
+#~~ Mob jab
+
+ggplot_mobjap_eig <- data.frame(eig = mobjap_eig) %>%
+  mutate(plot = "B",
+         X = 1:nrow(.),
+         colour_12 = c(c("plotted", "plotted", "retained"), 
+                       rep("discarded", each = nrow(.) - 3)),
+         colour_13 = c(c("plotted", "retained", "plotted"), 
+                       rep("discarded", each = nrow(.) - 3)))
+
+#~~ Thur ere kuh
+
+ggplot_thurerekuh_eig <- data.frame(eig = thurerekuh_eig) %>%
+  mutate(plot = "C",
+         X = 1:nrow(.),
+         colour_12 = c(c("plotted", "plotted", "retained"), 
+                       rep("discarded", each = nrow(.) - 3)),
+         colour_13 = c(c("plotted", "retained", "plotted"), 
+                       rep("discarded", each = nrow(.) - 3)))
+
+
+#~~ Hyp munk
+
+ggplot_hypmunk_eig <- data.frame(eig = hypmunk_eig) %>%
+  mutate(plot = "D",
+         X = 1:nrow(.),
+         colour_12 = c(c("plotted", "plotted", "retained"), 
+                       rep("discarded", each = nrow(.) - 3)),
+         colour_13 = c(c("plotted", "retained", "plotted"), 
+                       rep("discarded", each = nrow(.) - 3)))
+
+
+all_eigs <- rbind(ggplot_mantas_eig,
+                  ggplot_mobjap_eig,
+                  ggplot_thurerekuh_eig,
+                  ggplot_hypmunk_eig) %>%
+  pivot_longer(names_to = "pc",
+               cols = c(colour_12, colour_13))
+
+
+#~~ Plot
+
+eig_plot_a <- ggplot(filter(all_eigs, pc == "colour_12"), 
+                     aes(x=X, y=eig, fill = factor(value))) + 
+  scale_fill_manual(values = c("gray70", "black", "gray40")) +
+  geom_col() +
+  theme_emily() +
+  theme(axis.text.x = element_text(face = "plain"),
+        axis.text.y = element_text(face = "plain"),
+        axis.title = element_text(size = 13),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5),
+        strip.text = element_text(size=13, hjust = 0),
+        legend.text = element_markdown(size=13),
+        legend.title = element_text(size=13),
+        strip.text.x = element_text(face = "plain"),
+        legend.position = "none",
+        text = element_text(color='black')) +
+  xlab("PC") + 
+  ylab("Eigenvector") +
+  facet_wrap(~ plot, scales = "free", ncol = 1)
+
+
+
+eig_plot_b <- ggplot(filter(all_eigs, pc == "colour_13"), 
+                     aes(x=X, y=eig, fill = factor(value))) + 
+  scale_fill_manual(values = c("gray70", "black", "gray40")) +
+  geom_col() +
+  theme_emily() +
+  theme(axis.text.x = element_text(face = "plain"),
+        axis.text.y = element_text(face = "plain"),
+        axis.title = element_text(size = 13),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.5),
+        strip.text = element_blank(),
+        strip.text.x = element_text(face = "plain"),
+        legend.position = "none",
+        text = element_text(color='black')) +
+  xlab("PC") +
+  ylab("Eigenvector") +
+  facet_wrap(~ plot, scales = "free", ncol = 1)
+
+eig_plot_a + eig_plot_b
+
+png(file="figs/Figure_S4.png", units = "in", res = 300, height=10, width=9)
+eig_plot_a + eig_plot_b
+dev.off()
+
+
+
+#~~~~~~~~~~~~~
 mantas_eig <- pca_mantas$eig
 mobjap_eig <- pca_mobjap$eig
 thurerekuh_eig <- pca_thurerekuh$eig

@@ -5,6 +5,7 @@ library(adegenet)
 library(dplyr)
 library(patchwork)
 library(ggtext)
+library(tidyr)
 
 # Function to read plink data and get sp names and geographic info
 
@@ -693,39 +694,65 @@ dev.off()
 #      Supplementary Plot       #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
+#~~ Manta
+
 mantas_eig <- pca_mantas$eig
 mobjap_eig <- pca_mobjap$eig
 thurerekuh_eig <- pca_thurerekuh$eig
 hypmunk_eig <- pca_hypmunk$eig
 
-ggplot_mantas_eig <- as.data.frame(mantas_eig) %>%
-  mutate(eig = mantas_eig, 
-         plot = "a")
+ggplot_mantas_eig <- data.frame(eig = mantas_eig) %>%
+  mutate(plot = "A",
+         X = 1:nrow(.),
+         colour_12 = c(c("plotted", "plotted", "retained"), 
+                       rep("discarded", each = nrow(.) - 3)),
+         colour_13 = c(c("plotted", "retained", "plotted"), 
+                       rep("discarded", each = nrow(.) - 3)))
 
-ggplot_mobjap_eig <- as.data.frame(mobjap_eig) %>%
-  mutate(eig = mobjap_eig, plot = "b")
+#~~ Mob jab
 
-ggplot_thurerekuh_eig <- as.data.frame(thurerekuh_eig) %>%
-  mutate(eig = thurerekuh_eig, plot = "c")
+ggplot_mobjap_eig <- data.frame(eig = mobjap_eig) %>%
+  mutate(plot = "B",
+         X = 1:nrow(.),
+         colour_12 = c(c("plotted", "plotted", "retained"), 
+                       rep("discarded", each = nrow(.) - 3)),
+         colour_13 = c(c("plotted", "retained", "plotted"), 
+           rep("discarded", each = nrow(.) - 3)))
 
-ggplot_hypmunk_eig <- as.data.frame(hypmunk_eig) %>%
-  mutate(eig = hypmunk_eig, plot = "d")
+#~~ Thur ere kuh
 
-all_eig <- read.csv("data/all_eig.csv", header=TRUE) %>%
-  mutate(plot = toupper(plot)) %>%
-  mutate(plot = case_when(plot == "B" ~ "A",
-                          plot == "C" ~ "B",
-                          plot == "D" ~ "B",
-                          plot == "E" ~ "C",
-                          plot == "F" ~ "C",
-                          plot == "G" ~ "D",
-                          plot == "H" ~ "D",
-                          TRUE ~ plot))
+ggplot_thurerekuh_eig <- data.frame(eig = thurerekuh_eig) %>%
+  mutate(plot = "C",
+         X = 1:nrow(.),
+         colour_12 = c(c("plotted", "plotted", "retained"), 
+                       rep("discarded", each = nrow(.) - 3)),
+         colour_13 = c(c("plotted", "retained", "plotted"), 
+                       rep("discarded", each = nrow(.) - 3)))
+
+
+#~~ Hyp munk
+
+ggplot_hypmunk_eig <- data.frame(eig = hypmunk_eig) %>%
+  mutate(plot = "D",
+         X = 1:nrow(.),
+         colour_12 = c(c("plotted", "plotted", "retained"), 
+                       rep("discarded", each = nrow(.) - 3)),
+         colour_13 = c(c("plotted", "retained", "plotted"), 
+                       rep("discarded", each = nrow(.) - 3)))
+
+
+all_eigs <- rbind(ggplot_mantas_eig,
+                  ggplot_mobjap_eig,
+                  ggplot_thurerekuh_eig,
+                  ggplot_hypmunk_eig) %>%
+  pivot_longer(names_to = "pc",
+               cols = c(colour_12, colour_13))
 
 
 #~~ Plot
 
-eig_plot_a <- ggplot(filter(all_eig, pc == 12), aes(x=X, y=eig, fill = factor(color))) + 
+eig_plot_a <- ggplot(filter(all_eigs, pc == "colour_12"), 
+                     aes(x=X, y=eig, fill = factor(value))) + 
   scale_fill_manual(values = c("gray70", "black", "gray40")) +
   geom_col() +
   theme_emily() +
@@ -744,8 +771,9 @@ eig_plot_a <- ggplot(filter(all_eig, pc == 12), aes(x=X, y=eig, fill = factor(co
   facet_wrap(~ plot, scales = "free", ncol = 1)
 
 
-eig_plot_b <- ggplot(filter(all_eig, pc == 13), 
-                     aes(x=X, y=eig, fill = factor(color))) + 
+
+eig_plot_b <- ggplot(filter(all_eigs, pc == "colour_13"), 
+                     aes(x=X, y=eig, fill = factor(value))) + 
   scale_fill_manual(values = c("gray70", "black", "gray40")) +
   geom_col() +
   theme_emily() +
